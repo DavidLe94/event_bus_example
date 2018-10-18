@@ -9,25 +9,35 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 public class SecondActivity extends AppCompatActivity {
-    private TextView textView;
+    public TextView textView;
+    public User user;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
         textView = findViewById(R.id.tv_text);
+//        if(getIntent().getSerializableExtra("User") != null){
+//            user = (User) getIntent().getSerializableExtra("User");
+//        }
+//        if(user!=null){
+//            textView.setText("Username: " + user.getUsername() + " Password: " + user.getPassword());
+//        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        if(!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        }
     }
 
     @SuppressLint("SetTextI18n")
     @Subscribe(threadMode = ThreadMode.POSTING, sticky = true)
-    public void onUser(UserEvent event){
-        textView.setText("Username: " + event.getUser().username + " Password: " + event.getUser().password);
+    public void OnUser(UserEvent event){
+        textView.setText("Username: " + event.getUser().getUsername() + " Password: " + event.getUser().getPassword());
     }
 
     @Override
